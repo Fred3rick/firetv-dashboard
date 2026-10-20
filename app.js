@@ -219,9 +219,17 @@
 
   var knownVersion = null;
 
+  // GitHub Pages fa tenere i file in cache per 10 minuti: prima di ricaricare
+  // li riscarica dalla rete, così la pagina riparte con la versione nuova.
+  function reloadFresh() {
+    Promise.all(WATCHED_FILES.map(function (f) {
+      return fetch(f, { cache: "reload" }).catch(function () {});
+    })).then(function () { location.reload(); });
+  }
+
   function checkForUpdate() {
     // Ricarica comunque una volta al giorno per non accumulare memoria nella WebView.
-    if (Date.now() - startedAt > 24 * 3600 * 1000) { location.reload(); return; }
+    if (Date.now() - startedAt > 24 * 3600 * 1000) { reloadFresh(); return; }
     var stamp = Date.now();
     Promise.all(WATCHED_FILES.map(function (f) {
       return fetch(f + "?check=" + stamp, { cache: "no-store" }).then(function (r) {
@@ -235,7 +243,7 @@
         window.DASHBOARD_VERSION = version;
         setStatus(!$("net-dot").classList.contains("offline"));
       } else if (version !== knownVersion) {
-        location.reload();
+        reloadFresh();
       }
     }).catch(function () { /* rete assente: si riprova al prossimo giro */ });
   }
