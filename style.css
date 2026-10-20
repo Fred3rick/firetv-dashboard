@@ -1,0 +1,174 @@
+/* Layout pensato per TV 16:9 vista da lontano. Le misure in vh/vw si adattano
+   alla risoluzione: la Fire TV espone 960x540 pixel CSS. */
+:root {
+  --text: #f4f1ea;
+  --text-soft: rgba(244, 241, 234, 0.72);
+  --text-faint: rgba(244, 241, 234, 0.45);
+  --card: rgba(255, 255, 255, 0.07);
+  --card-line: rgba(255, 255, 255, 0.10);
+  --accent: #ffcf7a;
+  --rain: #8cc8ff;
+  --margin-x: 5vw;
+  --margin-y: 6vh;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: #0b1020; }
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: var(--text);
+  font-family: "Outfit", "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 300;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cielo: quattro gradienti scelti in base a alba/giorno/tramonto/notte. */
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  transition: background 4s ease;
+}
+body[data-phase="night"] .sky {
+  background: radial-gradient(ellipse at 75% 0%, #1d2b55 0%, #0d1430 45%, #060914 100%);
+}
+body[data-phase="dawn"] .sky {
+  background: linear-gradient(170deg, #2b3a6b 0%, #8a5a7a 55%, #e79a6a 100%);
+}
+body[data-phase="day"] .sky {
+  background: linear-gradient(170deg, #164677 0%, #2a679f 55%, #4f88b8 100%);
+}
+body[data-phase="dusk"] .sky {
+  background: linear-gradient(170deg, #26244f 0%, #7a3f63 55%, #e0765a 100%);
+}
+
+.layout {
+  position: absolute;
+  inset: var(--margin-y) var(--margin-x) calc(var(--margin-y) + 4vh);
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "time now"
+    "hourly hourly"
+    "daily daily";
+  gap: 3.5vh 4vw;
+}
+
+/* Orologio */
+.time-block { grid-area: time; align-self: start; }
+.clock {
+  font-size: 27vh;
+  font-weight: 200;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.colon { display: inline-block; transform: translateY(-0.06em); opacity: 0.8; }
+.colon.off { opacity: 0.25; }
+.date {
+  margin-top: 2vh;
+  font-size: 5.6vh;
+  font-weight: 300;
+  color: var(--text-soft);
+}
+.date::first-letter { text-transform: uppercase; }
+.sun-times {
+  margin-top: 1.6vh;
+  font-size: 3.2vh;
+  color: var(--text-faint);
+  display: flex;
+  gap: 2.5vw;
+}
+.sun-times svg { width: 3.6vh; height: 3.6vh; vertical-align: -0.7vh; margin-right: 0.6vw; }
+
+/* Meteo attuale */
+.now-block {
+  grid-area: now;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2vw;
+}
+.now-icon svg { width: 26vh; height: 26vh; }
+.now-temp { font-size: 17vh; font-weight: 200; line-height: 0.95; }
+.now-desc { font-size: 4.8vh; color: var(--text-soft); margin-top: 0.8vh; }
+.now-meta { font-size: 3.2vh; color: var(--text-faint); margin-top: 1.2vh; line-height: 1.5; }
+
+/* Striscia oraria */
+.hourly {
+  grid-area: hourly;
+  min-width: 0;
+  align-self: end;
+  display: grid;
+  grid-template-columns: repeat(var(--count, 8), minmax(0, 1fr));
+  gap: 1vw;
+}
+.hour {
+  text-align: center;
+  padding: 1.6vh 0 1.8vh;
+  border-radius: 2vh;
+  background: var(--card);
+  border: 1px solid var(--card-line);
+}
+.hour .h { font-size: 3vh; color: var(--text-soft); }
+.hour svg { width: 7vh; height: 7vh; margin: 0.6vh 0; }
+.hour .t { font-size: 4.2vh; font-weight: 400; }
+.hour .p { font-size: 2.6vh; color: var(--rain); min-height: 3.2vh; }
+
+/* Prossimi giorni */
+.daily {
+  grid-area: daily;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--count, 5), minmax(0, 1fr));
+  gap: 1vw;
+}
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8vw;
+  padding: 1.4vh 0.6vw;
+  min-width: 0;
+  border-radius: 2vh;
+  background: var(--card);
+  border: 1px solid var(--card-line);
+}
+.day .d { font-size: 3.4vh; color: var(--text-soft); }
+.day svg { width: 6vh; height: 6vh; flex: none; }
+.day .mx { font-size: 3.8vh; font-weight: 400; }
+.day .mn { font-size: 3.4vh; color: var(--text-faint); }
+
+/* Barra di stato */
+.status {
+  position: absolute;
+  left: var(--margin-x);
+  right: var(--margin-x);
+  bottom: calc(var(--margin-y) - 1vh);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+  font-size: 2.6vh;
+  color: var(--text-faint);
+}
+.dot { width: 1.4vh; height: 1.4vh; border-radius: 50%; background: #6fd18b; }
+.dot.offline { background: #ff7a6b; }
+
+/* Icone meteo */
+.i-sun { fill: var(--accent); }
+.i-ray { stroke: var(--accent); stroke-width: 4; stroke-linecap: round; }
+.i-moon { fill: #e8e2cf; }
+.i-cloud { fill: #e9eef5; }
+.i-cloud-dark { fill: #aab4c3; }
+.i-drop { stroke: var(--rain); stroke-width: 4; stroke-linecap: round; }
+.i-snow { fill: #ffffff; }
+.i-bolt { fill: #ffd84d; }
+.i-fog { stroke: #d6dce4; stroke-width: 4; stroke-linecap: round; }
+.i-line { stroke: currentColor; stroke-width: 3; stroke-linecap: round; fill: none; }

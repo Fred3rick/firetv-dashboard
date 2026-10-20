@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Casa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-phase="night">
+  <div class="sky"></div>
+
+  <main class="layout">
+    <section class="time-block">
+      <div class="clock">
+        <span id="hours">--</span><span class="colon">:</span><span id="minutes">--</span>
+      </div>
+      <div class="date" id="date"></div>
+      <div class="sun-times" id="sun-times"></div>
+    </section>
+
+    <section class="now-block" id="now">
+      <div class="now-icon" id="now-icon"></div>
+      <div class="now-text">
+        <div class="now-temp" id="now-temp">--°</div>
+        <div class="now-desc" id="now-desc">Caricamento meteo…</div>
+        <div class="now-meta" id="now-meta"></div>
+      </div>
+    </section>
+
+    <section class="hourly" id="hourly"></section>
+    <section class="daily" id="daily"></section>
+  </main>
+
+  <footer class="status">
+    <span id="city"></span>
+    <span class="dot" id="net-dot"></span>
+    <span id="updated"></span>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
