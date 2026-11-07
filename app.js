@@ -2,7 +2,7 @@
   "use strict";
 
   var CFG = window.DASHBOARD_CONFIG;
-  var WATCHED_FILES = ["index.html", "style.css", "app.js", "config.js"];
+  var WATCHED_FILES = ["index.html", "style.css", "app.js", "config.js", "kiosk.css", "kiosk.js"];
   var STORAGE_KEY = "dashboard-weather";
   var startedAt = Date.now();
   var weather = null;
@@ -105,6 +105,7 @@
     var now = localNow();
     $("hours").textContent = now.hh;
     $("minutes").textContent = now.mm;
+    $("mini-clock").textContent = now.hh + ":" + now.mm;
     document.querySelector(".colon").classList.toggle("off", Number(now.ss) % 2 === 1);
     var date = dateFormatter.format(new Date());
     if ($("date").textContent !== date) $("date").textContent = date;
@@ -133,6 +134,7 @@
 
     $("now-icon").innerHTML = icon(c.weather_code, c.is_day === 1);
     $("now-temp").textContent = Math.round(c.temperature_2m) + "°";
+    $("mini-temp").textContent = Math.round(c.temperature_2m) + "°";
     $("now-desc").textContent = DESCRIPTIONS[c.weather_code] || "—";
     $("now-meta").innerHTML =
       "Max " + Math.round(d.temperature_2m_max[0]) + "° · Min " + Math.round(d.temperature_2m_min[0]) + "°<br>" +
@@ -171,8 +173,7 @@
   function setStatus(online) {
     $("net-dot").classList.toggle("offline", !online);
     var when = weather ? "Meteo delle " + hhmm(weather.current.time) : "Meteo non disponibile";
-    $("updated").textContent = when + (online ? "" : " · offline, riprovo") +
-      (window.DASHBOARD_VERSION ? " · versione " + window.DASHBOARD_VERSION : "");
+    $("updated").textContent = when + (online ? "" : " · ultimo dato salvato");
   }
 
   // ---------- Dati meteo (Open-Meteo, nessuna chiave) ----------

@@ -1,0 +1,13 @@
+{
+  "name": "firetv-dashboard",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Kiosk automatico per Fire TV, senza dipendenze a runtime",
+  "scripts": {
+    "test": "python3 -m unittest discover -s tests -p 'test_*.py'",
+    "test:browser": "node tests/kiosk.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.65.0"
+  }
+}

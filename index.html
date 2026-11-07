@@ -3,14 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard Casa</title>
+  <meta name="theme-color" content="#080e16">
+  <meta name="description" content="Una finestra sul mondo: Palermo, meteo, natura, spazio e notizie tech. Tutto scorre, automaticamente.">
+  <title>Casa · Una finestra sul mondo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="kiosk.css">
 </head>
 <body data-phase="night">
-  <main class="layout">
+  <header class="kiosk-top">
+    <div class="wordmark"><span class="brand-mark" aria-hidden="true">◈</span> CASA <span class="brand-caption">UNA FINESTRA SUL MONDO</span></div>
+    <div class="mini-status"><span id="mini-city">Palermo</span><span id="mini-temp">—</span><time id="mini-clock">--:--</time></div>
+  </header>
+
+  <main id="stage">
+  <section id="scene-weather" class="scene is-active" aria-label="Orologio e meteo" aria-hidden="false">
+  <div class="layout">
     <section class="time-block">
       <div class="clock">
         <span id="hours">--</span><span class="colon">:</span><span id="minutes">--</span>
@@ -30,15 +40,65 @@
 
     <section class="hourly" id="hourly"></section>
     <section class="daily" id="daily"></section>
-  </main>
+  </div>
 
   <footer class="status">
     <span id="city"></span>
     <span class="dot" id="net-dot"></span>
     <span id="updated"></span>
   </footer>
+  </section>
+
+  <section id="scene-palermo" class="scene" aria-label="Panorami di Palermo" aria-hidden="true">
+    <div class="scene-heading"><p class="eyebrow">38°07′ N &nbsp; 13°21′ E <span class="heading-rule"></span> VICINO A CASA</p><h1>Una finestra su Palermo<span class="accent">.</span></h1></div>
+    <div id="webcam-grid" class="webcam-grid"></div>
+    <p class="scene-credit">Widget fotografici SkylineWebcams · aggiornamento ogni 5 minuti<span id="webcam-archive-credit" hidden><br>Sfondo d’archivio: <a href="https://commons.wikimedia.org/wiki/File:Panorama_from_Palermo_cathedral_roof_-_North.jpg">Panorama dai tetti · Wittylama</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · ritaglio per lo schermo</span></p>
+  </section>
+
+  <section id="scene-gallery" class="scene gallery-scene" aria-label="Fotografie dal mondo" aria-hidden="true">
+    <div class="gallery-image-wrap"><img id="gallery-image" class="gallery-image" alt=""></div>
+    <div class="gallery-shade"></div>
+    <div class="gallery-copy"><p id="gallery-eyebrow" class="eyebrow"></p><h1 id="gallery-title"></h1><p id="gallery-caption"></p></div>
+    <p id="gallery-credit" class="gallery-credit"></p>
+    <span class="gallery-coordinate" id="gallery-number"></span>
+  </section>
+
+  <section id="scene-tech" class="scene tech-scene" aria-label="Notizie dal mondo tech" aria-hidden="true">
+    <div class="tech-decoration" aria-hidden="true"><div></div><div></div><div></div></div>
+    <div class="scene-heading"><p class="eyebrow"><span class="signal-dot"></span> IL MONDO CHE CAMBIA</p><h1>Segnali dal futuro<span class="accent">.</span></h1></div>
+    <div class="news-layout">
+      <article class="news-feature"><div class="news-kicker"><span id="news-category" class="category-pill"></span><span id="news-position"></span></div><h2 id="news-title"></h2><p id="news-byline" class="news-byline"></p><div class="news-reading-track"><span id="news-reading-progress"></span></div></article>
+      <aside class="news-next"><p class="eyebrow">A SEGUIRE</p><article><p id="news-next-source-1"></p><h3 id="news-next-title-1"></h3></article><article><p id="news-next-source-2"></p><h3 id="news-next-title-2"></h3></article></aside>
+    </div>
+    <p id="news-freshness" class="scene-credit"></p>
+  </section>
+
+  <section id="scene-world" class="scene world-scene" aria-label="Orologi del mondo" aria-hidden="true">
+    <div class="world-copy"><p class="eyebrow">UN PIANETA, MILLE ORARI</p><h1>Qui.<br>E altrove<span class="accent">.</span></h1><p>Mentre il mondo<br>continua a girare.</p></div>
+    <div class="earth-orbit" aria-hidden="true"><span class="orbit-ring ring-one"></span><span class="orbit-ring ring-two"></span><div class="earth"><img src="assets/gallery/earth.jpg" alt=""></div><span class="orbital-dot"></span></div>
+    <div class="world-clocks" id="world-clocks"></div>
+    <p class="scene-credit">La Terra · composito satellitare d’archivio NASA / JPL-Caltech</p>
+  </section>
+
+  <section id="scene-radar" class="scene radar-scene" aria-label="Mappa meteo della Sicilia" aria-hidden="true">
+    <div class="scene-heading"><p class="eyebrow">UNO SGUARDO PIÙ IN LÀ</p><h1>Il respiro del Mediterraneo<span class="accent">.</span></h1></div>
+    <div id="radar-container" class="radar-container"><div class="radar-poster"><span class="signal-dot"></span> Connessione alla mappa…</div></div>
+    <p class="scene-credit">Vento e previsioni · Windy · dati del modello, non una ripresa video</p>
+  </section>
+
+  <section id="scene-ambient" class="scene ambient-scene" aria-label="Atmosfere animate" aria-hidden="true">
+    <div class="aurora aurora-one"></div><div class="aurora aurora-two"></div><div class="aurora aurora-three"></div>
+    <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+    <div class="ambient-copy"><p class="eyebrow">UN PICCOLO INTERVALLO</p><h1>Lascia scorrere<span>.</span></h1><p>Un respiro lento.<br>Il resto può aspettare.</p></div>
+    <p class="scene-credit">Atmosfere · composizione generativa</p>
+  </section>
+  </main>
+
+  <footer class="kiosk-footer"><div class="scene-identity"><span id="scene-number">01</span><span id="scene-name">A casa</span></div><div id="scene-dots" class="scene-dots" aria-hidden="true"></div><p class="up-next">POI <span id="scene-next">Palermo</span></p></footer>
+  <div class="scene-progress" aria-hidden="true"><span id="scene-progress-fill"></span></div>
 
   <script src="config.js"></script>
   <script src="app.js"></script>
+  <script src="kiosk.js"></script>
 </body>
 </html>

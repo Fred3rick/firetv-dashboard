@@ -1,0 +1,45 @@
+name: Publish kiosk
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Refresh technology headlines
+        run: python scripts/update_news.py
+      - name: Test feed parsing
+        run: python -m unittest discover -s tests -p 'test_*.py'
+      - name: Prepare static site
+        run: |
+          mkdir _site
+          cp index.html style.css app.js kiosk.css kiosk.js config.js .nojekyll _site/
+          cp -R assets data _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
