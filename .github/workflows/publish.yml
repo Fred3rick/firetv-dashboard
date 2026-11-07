@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -31,6 +31,21 @@ jobs:
         run: python scripts/update_news.py
       - name: Test feed parsing
         run: python -m unittest discover -s tests -p 'test_*.py'
+      - name: Save a monthly news snapshot
+        if: github.event_name == 'schedule'
+        continue-on-error: true
+        run: |
+          snapshot_month="$(git show HEAD:data/news.json | python -c 'import json,sys; print(json.load(sys.stdin).get("updatedAt", "")[:7])')"
+          current_month="$(date -u +%Y-%m)"
+          if [ "$snapshot_month" != "$current_month" ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add data/news.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Refresh monthly kiosk news snapshot"
+              git push origin HEAD:main
+            fi
+          fi
       - name: Prepare static site
         run: |
           mkdir _site

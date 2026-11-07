@@ -66,6 +66,10 @@ Controlla le modifiche al codice ogni 30 secondi e ricarica i file aggiornati;
 si ricarica anche una volta al giorno per limitare l'accumulo di memoria.
 `data/news.json` nella repo è una fotografia iniziale: il workflow genera il feed
 aggiornato direttamente nell'artefatto pubblicato, senza commit orari automatici.
+Una volta al mese salva anche uno snapshot dei titoli con un commit del bot:
+mantiene recente il backup e attività nella repo, così la pianificazione non
+dipende da modifiche manuali. GitHub può infatti [sospendere i workflow delle
+repo pubbliche inattive per 60 giorni](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/disable-and-enable-workflows).
 
 ## Sviluppo e verifica
 
