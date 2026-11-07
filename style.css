@@ -46,7 +46,7 @@ body[data-phase="dusk"] {
   position: absolute;
   inset: var(--margin-y) var(--margin-x) calc(var(--margin-y) + 4vh);
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
   grid-template-areas:
     "time now"
@@ -56,7 +56,7 @@ body[data-phase="dusk"] {
 }
 
 /* Orologio */
-.time-block { grid-area: time; align-self: start; }
+.time-block { grid-area: time; align-self: start; min-width: 0; }
 .clock {
   font-size: 27vh;
   font-weight: 200;
@@ -85,15 +85,28 @@ body[data-phase="dusk"] {
 /* Meteo attuale */
 .now-block {
   grid-area: now;
+  min-width: 0;
+  align-self: start;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 2vw;
 }
+.now-icon { flex: none; }
 .now-icon svg { width: 26vh; height: 26vh; }
+.now-text { flex: 1; min-width: 0; }
 .now-temp { font-size: 17vh; font-weight: 200; line-height: 0.95; }
-.now-desc { font-size: 4.8vh; color: var(--text-soft); margin-top: 0.8vh; }
-.now-meta { font-size: 3.2vh; color: var(--text-faint); margin-top: 1.2vh; line-height: 1.5; }
+/* Due righe riservate alla descrizione: il cambio di meteo non sposta le
+   previsioni verso la barra di stato, anche a 960x540. */
+.now-desc {
+  font-size: 4.4vh;
+  line-height: 1.15;
+  min-height: 2.3em;
+  overflow-wrap: anywhere;
+  color: var(--text-soft);
+  margin-top: 0.8vh;
+}
+.now-meta { font-size: 3vh; color: var(--text-faint); margin-top: 1.2vh; line-height: 1.35; }
 
 /* Striscia oraria */
 .hourly {
